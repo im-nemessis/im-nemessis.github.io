@@ -2,6 +2,7 @@ let h1 = document.querySelector("h1");
 let button = document.getElementById("fetchJokes");
 let button2 = document.getElementById("fetchGif");
 let img = document.getElementById("img");
+let para = document.getElementById("tochange");
 
 // everything fine up here
 
@@ -23,19 +24,20 @@ function getJoke() {
 
   fetching.then(function(response) {
     if (!response.ok) {
-      h1.innerText =
+      para.innerText =
         "couldn't find the jokes nework error probbaly check your internet connection ";
+    } else {
+      response
+        .json()
+        .then(function(json) {
+          para.innerText = json.joke;
+        })
+        .catch(function(error) {
+          para.innerText =
+            "couldn't find the jokes nework error probbaly check your internet connection ";
+          console.log(error);
+        });
     }
-    response
-      .json()
-      .then(function(json) {
-        h1.innerText = json.joke;
-      })
-      .catch(function(error) {
-        h1.innerText =
-          "couldn't find the jokes nework error probbaly check your internet connection ";
-        console.log(error);
-      });
   });
 }
 
@@ -61,13 +63,16 @@ function getGif() {
   });
 }
 
-function ana (){
-
-img.src = "";
-getGif();
-
+function invokeGetGif() {
+  img.src = "src/img/loading.png";
+  getGif();
 }
 
-img.addEventListener("click",ana);
-button.addEventListener("click",getJoke);
-button2.addEventListener("click",ana);
+function invokeGetJoke() {
+  para.innerText = "YOUR JOKES IS LOADING........";
+  getJoke();
+}
+
+img.addEventListener("click", invokeGetGif);
+button.addEventListener("click", invokeGetJoke);
+button2.addEventListener("click", invokeGetGif);
